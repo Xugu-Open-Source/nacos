@@ -640,6 +640,13 @@
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.xugudb</groupId>
+            <artifactId>xugu-jdbc</artifactId>
+            <!--          <scope>system</scope>-->
+            <!--          <systemPath>${project.basedir}/src/main/resources/lib/xugu-jdbc-12.3.1.2.jar</systemPath>-->
+            <version>12.3.1</version>
+        </dependency>
 
     </dependencies>
 
@@ -849,13 +856,7 @@
 <!--                <version>${mysql-connector-java.version}</version>-->
 <!--            </dependency>-->
 
-            <dependency>
-                <groupId>com.xugudb</groupId>
-                <artifactId>xugu-jdbc</artifactId>
-                <!--          <scope>system</scope>-->
-                <!--          <systemPath>${project.basedir}/src/main/resources/lib/xugu-jdbc-12.3.1.2.jar</systemPath>-->
-                <version>12.3.1</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derby</artifactId>
