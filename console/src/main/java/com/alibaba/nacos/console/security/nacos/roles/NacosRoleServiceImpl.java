@@ -18,6 +18,7 @@ package com.alibaba.nacos.console.security.nacos.roles;
 
 import com.alibaba.nacos.auth.common.AuthConfigs;
 import com.alibaba.nacos.auth.model.Permission;
+import com.alibaba.nacos.common.utils.ConcurrentHashSet;
 import com.alibaba.nacos.config.server.auth.PermissionInfo;
 import com.alibaba.nacos.config.server.auth.PermissionPersistService;
 import com.alibaba.nacos.config.server.auth.RoleInfo;
@@ -28,7 +29,6 @@ import com.alibaba.nacos.console.security.nacos.users.NacosUserDetailsServiceImp
 import com.alibaba.nacos.core.utils.Loggers;
 import io.jsonwebtoken.lang.Collections;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.mina.util.ConcurrentHashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -65,7 +65,7 @@ public class NacosRoleServiceImpl {
     private PermissionPersistService permissionPersistService;
     
     private volatile Set<String> roleSet = new ConcurrentHashSet<>();
-    
+
     private volatile Map<String, List<RoleInfo>> roleInfoMap = new ConcurrentHashMap<>();
     
     private volatile Map<String, List<PermissionInfo>> permissionInfoMap = new ConcurrentHashMap<>();
@@ -74,7 +74,7 @@ public class NacosRoleServiceImpl {
     private void reload() {
         try {
             Page<RoleInfo> roleInfoPage = rolePersistService
-                    .getRolesByUserName(StringUtils.EMPTY, 1, Integer.MAX_VALUE);
+                    .getRolesByUserName(StringUtils.EMPTY, 1, 1000000);
             if (roleInfoPage == null) {
                 return;
             }
@@ -91,7 +91,7 @@ public class NacosRoleServiceImpl {
             Map<String, List<PermissionInfo>> tmpPermissionInfoMap = new ConcurrentHashMap<>(16);
             for (String role : tmpRoleSet) {
                 Page<PermissionInfo> permissionInfoPage = permissionPersistService
-                        .getPermissions(role, 1, Integer.MAX_VALUE);
+                        .getPermissions(role, 1, 1000000);
                 tmpPermissionInfoMap.put(role, permissionInfoPage.getPageItems());
             }
             
@@ -157,7 +157,7 @@ public class NacosRoleServiceImpl {
     public List<RoleInfo> getRoles(String username) {
         List<RoleInfo> roleInfoList = roleInfoMap.get(username);
         if (!authConfigs.isCachingEnabled()) {
-            Page<RoleInfo> roleInfoPage = getRolesFromDatabase(username, 1, Integer.MAX_VALUE);
+            Page<RoleInfo> roleInfoPage = getRolesFromDatabase(username, 1, 1000000);
             if (roleInfoPage != null) {
                 roleInfoList = roleInfoPage.getPageItems();
             }
@@ -176,7 +176,7 @@ public class NacosRoleServiceImpl {
     public List<PermissionInfo> getPermissions(String role) {
         List<PermissionInfo> permissionInfoList = permissionInfoMap.get(role);
         if (!authConfigs.isCachingEnabled()) {
-            Page<PermissionInfo> permissionInfoPage = getPermissionsFromDatabase(role, 1, Integer.MAX_VALUE);
+            Page<PermissionInfo> permissionInfoPage = getPermissionsFromDatabase(role, 1, 1000000);
             if (permissionInfoPage != null) {
                 permissionInfoList = permissionInfoPage.getPageItems();
             }
