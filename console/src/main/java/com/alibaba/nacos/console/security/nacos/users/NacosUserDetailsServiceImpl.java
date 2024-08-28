@@ -59,7 +59,7 @@ public class NacosUserDetailsServiceImpl implements UserDetailsService {
     @Scheduled(initialDelay = 15000, fixedDelay = 15000)
     private void reload() {
         try {
-            Page<User> users = getUsersFromDatabase(1, Integer.MAX_VALUE);
+            Page<User> users = getUsersFromDatabase(1, 1000000);
             if (users == null) {
                 return;
             }
