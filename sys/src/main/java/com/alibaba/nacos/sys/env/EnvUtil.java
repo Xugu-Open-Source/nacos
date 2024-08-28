@@ -59,6 +59,8 @@ public class EnvUtil {
     public static final String DATABASE_MYSQL = "mysql";
 
     public static final String DATABASE_XUGU = "xugu";
+
+    public static final String DATABASE_CAE = "cae";
     /**
      * The key of nacos home.
      */
@@ -395,6 +397,7 @@ public class EnvUtil {
         switch (datasourcePlatform) {
             case EnvUtil.DATABASE_MYSQL:
             case EnvUtil.DATABASE_XUGU:
+            case EnvUtil.DATABASE_CAE:
                 return true;
             default:
                 return false;
