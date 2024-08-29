@@ -633,7 +633,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
 
     @Override
     public void removeConfigHistory(final Timestamp startTime) {
-        String sql = "delete from his_config_info where gmt_modified < '"+startTime+"' ";
+        String sql = "delete from his_config_info where gmt_modified < '" + startTime + "' ";
         ExternalXuguStoragePaginationHelperImpl<ConfigInfo> paginationHelper = (ExternalXuguStoragePaginationHelperImpl<ConfigInfo>) createPaginationHelper();
         try {
             paginationHelper.updateLimitWithResponse(sql);

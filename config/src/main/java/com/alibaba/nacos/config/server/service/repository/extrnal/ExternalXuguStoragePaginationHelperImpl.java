@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.alibaba.nacos.config.server.service.repository.extrnal;
 
 import com.alibaba.nacos.config.server.model.Page;
@@ -211,7 +212,6 @@ class ExternalXuguStoragePaginationHelperImpl<E> implements PaginationHelper {
             EmbeddedStorageContextUtils.cleanAllContext();
         }
     }
-
 
     public int updateLimitWithResponse(final String sql) {
         String sqlUpdate = sql;

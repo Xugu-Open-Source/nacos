@@ -62,9 +62,7 @@ public class EnvUtil {
     public static final String DATABASE_XUGU = "xugu";
 
     public static final String DATABASE_CAE = "cae";
-    /**
-     * The key of nacos home.
-     */
+
     public static final String NACOS_HOME_KEY = "nacos.home";
 
     private static String localAddress = "";
@@ -394,6 +392,12 @@ public class EnvUtil {
         InputStream inputStream = EnvUtil.class.getResourceAsStream("/application.properties");
         return new InputStreamResource(inputStream);
     }
+
+    /**
+     * xugu cae Compatible.
+     * @param datasourcePlatform dataType
+     * @return boolean
+     */
     public static boolean isExternalDB(String datasourcePlatform) {
         switch (datasourcePlatform) {
             case EnvUtil.DATABASE_MYSQL:

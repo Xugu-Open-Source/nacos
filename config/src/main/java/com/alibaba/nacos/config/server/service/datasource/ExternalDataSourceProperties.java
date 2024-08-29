@@ -40,6 +40,7 @@ public class ExternalDataSourceProperties {
     private static final String TEST_QUERY = "SELECT 1";
 
     private Integer num;
+
     private String jdbcDriverName;
 
     private List<String> url = new ArrayList<>();
