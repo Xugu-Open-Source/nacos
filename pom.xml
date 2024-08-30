@@ -643,6 +643,7 @@
         <dependency>
             <groupId>com.xugudb</groupId>
             <artifactId>xugu-jdbc</artifactId>
+            <version>${xugu-jdbc.version}</version>
         </dependency>
     </dependencies>
 
