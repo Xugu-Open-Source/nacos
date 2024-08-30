@@ -837,8 +837,8 @@
 
             <!-- JDBC libs -->
             <dependency>
-                <groupId>com.xugu</groupId>
-                <artifactId>cloudjdbc</artifactId>
+                <groupId>com.xugudb</groupId>
+                <artifactId>xugu-jdbc</artifactId>
                 <version>${xugu-jdbc.version}</version>
             </dependency>
 
