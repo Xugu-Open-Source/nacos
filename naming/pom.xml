@@ -146,8 +146,8 @@
             <artifactId>micrometer-registry-elastic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.xugu</groupId>
-            <artifactId>cloudjdbc</artifactId>
+            <groupId>com.xugudb</groupId>
+            <artifactId>xugu-jdbc</artifactId>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
