@@ -65,6 +65,9 @@ public class ExternalDataSourceProperties {
         this.password = password;
     }
 
+    public void setJdbcDriverName(String jdbcDriverName) {
+        this.jdbcDriverName = jdbcDriverName;
+    }
     /**
      * Build serveral HikariDataSource.
      *
