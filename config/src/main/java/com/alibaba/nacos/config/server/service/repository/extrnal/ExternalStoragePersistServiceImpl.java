@@ -371,7 +371,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             final String srcUser, final Timestamp time, final boolean notify) {
         try {
             addConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             updateConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
         }
     }
@@ -382,7 +382,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
         try {
             addConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
             return true;
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             return updateConfigInfo4BetaCas(configInfo, betaIps, srcIp, null, time, notify);
         }
     }
@@ -392,7 +392,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             final String srcUser, final Timestamp time, final boolean notify) {
         try {
             addConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             updateConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
         }
     }
@@ -403,7 +403,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
         try {
             addConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
             return true;
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             return updateConfigInfo4TagCas(configInfo, tag, srcIp, null, time, notify);
         }
     }
@@ -449,7 +449,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
         try {
             addConfigInfo(srcIp, srcUser, configInfo, time, configAdvanceInfo, notify);
             return true;
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             return updateConfigInfoCas(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
         }
     }
@@ -458,7 +458,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
     public void insertOrUpdateSub(SubInfo subInfo) {
         try {
             addConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             updateConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
         }
     }
