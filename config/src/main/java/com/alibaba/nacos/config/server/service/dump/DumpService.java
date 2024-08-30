@@ -176,31 +176,19 @@ public abstract class DumpService {
             Runnable dumpAllBeta = () -> dumpAllTaskMgr.addTask(DumpAllBetaTask.TASK_ID, new DumpAllBetaTask());
             
             Runnable dumpAllTag = () -> dumpAllTaskMgr.addTask(DumpAllTagTask.TASK_ID, new DumpAllTagTask());
-            
+
             Runnable clearConfigHistory = () -> {
                 LOGGER.warn("clearConfigHistory start");
                 if (canExecute()) {
                     try {
                         Timestamp startTime = getBeforeStamp(TimeUtils.getCurrentTime(), 24 * getRetentionDays());
-                        int totalCount = persistService.findConfigHistoryCountByTime(startTime);
-                        if (totalCount > 0) {
-                            int pageSize = 1000;
-                            int removeTime = (totalCount + pageSize - 1) / pageSize;
-                            LOGGER.warn(
-                                    "clearConfigHistory, getBeforeStamp:{}, totalCount:{}, pageSize:{}, removeTime:{}",
-                                    startTime, totalCount, pageSize, removeTime);
-                            while (removeTime > 0) {
-                                // delete paging to avoid reporting errors in batches
-                                persistService.removeConfigHistory(startTime, pageSize);
-                                removeTime--;
-                            }
-                        }
+                        LOGGER.warn("clearConfigHistory, getBeforeStamp:{}, pageSize:{}", startTime);
+                        persistService.removeConfigHistory(startTime);
                     } catch (Throwable e) {
                         LOGGER.error("clearConfigHistory error : {}", e.toString());
                     }
                 }
             };
-            
             try {
                 dumpConfigInfo(dumpAllProcessor);
                 

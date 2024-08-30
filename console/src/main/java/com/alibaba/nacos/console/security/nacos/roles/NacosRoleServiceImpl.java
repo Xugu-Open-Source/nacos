@@ -76,7 +76,7 @@ public class NacosRoleServiceImpl {
     private void reload() {
         try {
             Page<RoleInfo> roleInfoPage = rolePersistService
-                    .getRolesByUserName(StringUtils.EMPTY, DEFAULT_PAGE_NO, Integer.MAX_VALUE);
+                    .getRolesByUserName(StringUtils.EMPTY, DEFAULT_PAGE_NO, 1000000);
             if (roleInfoPage == null) {
                 return;
             }
@@ -93,7 +93,7 @@ public class NacosRoleServiceImpl {
             Map<String, List<PermissionInfo>> tmpPermissionInfoMap = new ConcurrentHashMap<>(16);
             for (String role : tmpRoleSet) {
                 Page<PermissionInfo> permissionInfoPage = permissionPersistService
-                        .getPermissions(role, DEFAULT_PAGE_NO, Integer.MAX_VALUE);
+                        .getPermissions(role, DEFAULT_PAGE_NO, 1000000);
                 tmpPermissionInfoMap.put(role, permissionInfoPage.getPageItems());
             }
             
@@ -159,7 +159,7 @@ public class NacosRoleServiceImpl {
     public List<RoleInfo> getRoles(String username) {
         List<RoleInfo> roleInfoList = roleInfoMap.get(username);
         if (!authConfigs.isCachingEnabled()) {
-            Page<RoleInfo> roleInfoPage = getRolesFromDatabase(username, DEFAULT_PAGE_NO, Integer.MAX_VALUE);
+            Page<RoleInfo> roleInfoPage = getRolesFromDatabase(username, DEFAULT_PAGE_NO, 1000000);
             if (roleInfoPage != null) {
                 roleInfoList = roleInfoPage.getPageItems();
             }
@@ -178,7 +178,7 @@ public class NacosRoleServiceImpl {
     public List<PermissionInfo> getPermissions(String role) {
         List<PermissionInfo> permissionInfoList = permissionInfoMap.get(role);
         if (!authConfigs.isCachingEnabled()) {
-            Page<PermissionInfo> permissionInfoPage = getPermissionsFromDatabase(role, DEFAULT_PAGE_NO, Integer.MAX_VALUE);
+            Page<PermissionInfo> permissionInfoPage = getPermissionsFromDatabase(role, DEFAULT_PAGE_NO, 1000000);
             if (permissionInfoPage != null) {
                 permissionInfoList = permissionInfoPage.getPageItems();
             }

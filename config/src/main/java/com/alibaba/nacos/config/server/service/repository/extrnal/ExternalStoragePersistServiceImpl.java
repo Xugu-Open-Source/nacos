@@ -52,6 +52,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -370,7 +371,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             final String srcUser, final Timestamp time, final boolean notify) {
         try {
             addConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             updateConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
         }
     }
@@ -381,7 +382,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
         try {
             addConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
             return true;
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             return updateConfigInfo4BetaCas(configInfo, betaIps, srcIp, null, time, notify);
         }
     }
@@ -391,7 +392,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             final String srcUser, final Timestamp time, final boolean notify) {
         try {
             addConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             updateConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
         }
     }
@@ -402,7 +403,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
         try {
             addConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
             return true;
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             return updateConfigInfo4TagCas(configInfo, tag, srcIp, null, time, notify);
         }
     }
@@ -431,7 +432,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             Map<String, Object> configAdvanceInfo, boolean notify) {
         try {
             addConfigInfo(srcIp, srcUser, configInfo, time, configAdvanceInfo, notify);
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             updateConfigInfo(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
         }
     }
@@ -448,7 +449,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
         try {
             addConfigInfo(srcIp, srcUser, configInfo, time, configAdvanceInfo, notify);
             return true;
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             return updateConfigInfoCas(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
         }
     }
@@ -457,7 +458,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
     public void insertOrUpdateSub(SubInfo subInfo) {
         try {
             addConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             updateConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
         }
     }
@@ -631,17 +632,17 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
     }
     
     @Override
-    public void removeConfigHistory(final Timestamp startTime, final int limitSize) {
-        String sql = "delete from his_config_info where gmt_modified < ? limit ?";
-        PaginationHelper<ConfigInfo> helper = createPaginationHelper();
+    public void removeConfigHistory(final Timestamp startTime) {
+        String sql = "delete from his_config_info where gmt_modified < '"+startTime+"' ";
+        ExternalXuguStoragePaginationHelperImpl<ConfigInfo> paginationHelper = (ExternalXuguStoragePaginationHelperImpl<ConfigInfo>) createPaginationHelper();
         try {
-            helper.updateLimit(sql, new Object[] {startTime, limitSize});
+            paginationHelper.updateLimitWithResponse(sql);
         } catch (CannotGetJdbcConnectionException e) {
             LogUtil.FATAL_LOG.error("[db-error] " + e.toString(), e);
             throw e;
         }
     }
-    
+
     @Override
     public int findConfigHistoryCountByTime(final Timestamp startTime) {
         String sql = "SELECT COUNT(*) FROM his_config_info WHERE gmt_modified < ?";
