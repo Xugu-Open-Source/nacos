@@ -643,11 +643,7 @@
         <dependency>
             <groupId>com.xugudb</groupId>
             <artifactId>xugu-jdbc</artifactId>
-            <!--          <scope>system</scope>-->
-            <!--          <systemPath>${project.basedir}/src/main/resources/lib/xugu-jdbc-12.3.1.2.jar</systemPath>-->
-            <version>12.3.1</version>
         </dependency>
-
     </dependencies>
 
     <!-- 管理依赖版本号,子项目不会默认依赖 -->
