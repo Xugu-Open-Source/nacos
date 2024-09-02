@@ -107,7 +107,6 @@ public class EnvUtil {
     
     private static final String NACOS_TEMP_DIR_2 = "tmp";
 
-
     @JustForTest
     private static String confPath = "";
     
@@ -467,6 +466,12 @@ public class EnvUtil {
                 ThreadUtils.getSuitableThreadCount(1)) * scale;
         return result > 1 ? (int) result : 1;
     }
+
+    /**
+     * cae xugu Database compatibility.
+     * @param datasourcePlatform dataType
+     * @return boolean tag
+     */
     public static boolean isExternalDB(String datasourcePlatform) {
         switch (datasourcePlatform) {
             case EnvUtil.DATABASE_CAE:
