@@ -471,6 +471,7 @@ public class EnvUtil {
         switch (datasourcePlatform) {
             case EnvUtil.DATABASE_MYSQL:
             case EnvUtil.DATABASE_XUGU:
+            case EnvUtil.DATABASE_CAE:
                 return true;
             default:
                 return false;
