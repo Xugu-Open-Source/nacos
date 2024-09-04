@@ -176,15 +176,14 @@ public abstract class DumpService {
             Runnable dumpAllBeta = () -> dumpAllTaskMgr.addTask(DumpAllBetaTask.TASK_ID, new DumpAllBetaTask());
             
             Runnable dumpAllTag = () -> dumpAllTaskMgr.addTask(DumpAllTagTask.TASK_ID, new DumpAllTagTask());
-            
+
             Runnable clearConfigHistory = () -> {
                 LOGGER.warn("clearConfigHistory start");
                 if (canExecute()) {
                     try {
                         Timestamp startTime = getBeforeStamp(TimeUtils.getCurrentTime(), 24 * getRetentionDays());
-                        int pageSize = 1000;
-                        LOGGER.warn("clearConfigHistory, getBeforeStamp:{}, pageSize:{}", startTime, pageSize);
-                        persistService.removeConfigHistory(startTime, pageSize);
+                        LOGGER.warn("clearConfigHistory, getBeforeStamp:{}, pageSize:{}", startTime);
+                        persistService.removeConfigHistory(startTime);
                     } catch (Throwable e) {
                         LOGGER.error("clearConfigHistory error : {}", e.toString());
                     }
