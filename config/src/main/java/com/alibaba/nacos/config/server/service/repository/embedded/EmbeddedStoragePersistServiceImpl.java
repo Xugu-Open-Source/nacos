@@ -733,11 +733,11 @@ public class EmbeddedStoragePersistServiceImpl implements PersistService {
     }
     
     @Override
-    public void removeConfigHistory(final Timestamp startTime, final int limitSize) {
+    public void removeConfigHistory(final Timestamp startTime) {
         String sql = "DELETE FROM his_config_info WHERE id IN( "
-                + "SELECT id FROM his_config_info WHERE gmt_modified < ? OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY)";
+                + "SELECT id FROM his_config_info WHERE gmt_modified < ?)";
         PaginationHelper<ConfigInfo> helper = createPaginationHelper();
-        helper.updateLimit(sql, new Object[] {startTime, limitSize});
+        helper.updateLimit(sql, new Object[] {startTime});
     }
     
     @Override

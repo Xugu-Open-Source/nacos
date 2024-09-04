@@ -58,7 +58,12 @@ public class EnvUtil {
     public static final String FUNCTION_MODE_CONFIG = "config";
     
     public static final String FUNCTION_MODE_NAMING = "naming";
-    
+
+    public static final String DATABASE_MYSQL = "mysql";
+
+    public static final String DATABASE_XUGU = "xugu";
+
+    public static final String DATABASE_CAE = "xugu";
     /**
      * The key of nacos home.
      */
@@ -471,5 +476,15 @@ public class EnvUtil {
         double result = getProperty(Constants.AVAILABLE_PROCESSORS_BASIC, int.class,
                 ThreadUtils.getSuitableThreadCount(1)) * scale;
         return result > 1 ? (int) result : 1;
+    }
+
+    public static boolean isExternalDB(String datasourcePlatform) {
+        switch (datasourcePlatform) {
+            case EnvUtil.DATABASE_MYSQL:
+            case EnvUtil.DATABASE_XUGU:
+                return true;
+            default:
+                return false;
+        }
     }
 }
