@@ -67,9 +67,9 @@ public interface HistoryConfigInfoPersistService {
      * Delete data before startTime.
      *
      * @param startTime start time
-     * @param limitSize limit size
+     *
      */
-    void removeConfigHistory(final Timestamp startTime, final int limitSize);
+    void removeConfigHistory(final Timestamp startTime);
     //------------------------------------------update---------------------------------------------//
     //------------------------------------------select---------------------------------------------//
     

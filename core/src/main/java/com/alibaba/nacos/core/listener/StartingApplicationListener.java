@@ -82,7 +82,8 @@ public class StartingApplicationListener implements NacosApplicationListener {
     private static final String DERBY_DATABASE = "derby";
     
     private static final String DEFAULT_DATASOURCE_PLATFORM = "";
-    
+
+
     private static final String DATASOURCE_MODE_EXTERNAL = "external";
     
     private static final String DATASOURCE_MODE_EMBEDDED = "embedded";
@@ -252,8 +253,7 @@ public class StartingApplicationListener implements NacosApplicationListener {
         // External data sources are used by default in cluster mode
         String platform = this.getDatasourcePlatform(env);
         boolean useExternalStorage =
-                !DEFAULT_DATASOURCE_PLATFORM.equalsIgnoreCase(platform) && !DERBY_DATABASE.equalsIgnoreCase(platform);
-        
+                !DEFAULT_DATASOURCE_PLATFORM.equalsIgnoreCase(platform) && !DERBY_DATABASE.equalsIgnoreCase(platform)&&EnvUtil.isExternalDB(platform);
         // must initialize after setUseExternalDB
         // This value is true in stand-alone mode and false in cluster mode
         // If this value is set to true in cluster mode, nacos's distributed storage engine is turned on

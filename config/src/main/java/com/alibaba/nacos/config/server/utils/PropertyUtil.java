@@ -283,9 +283,8 @@ public class PropertyUtil implements ApplicationContextInitializer<ConfigurableA
             // External data sources are used by default in cluster mode
             String platform = DatasourcePlatformUtil.getDatasourcePlatform("");
             boolean useExternalStorage = !PropertiesConstant.EMPTY_DATASOURCE_PLATFORM.equalsIgnoreCase(platform)
-                    && !PropertiesConstant.DERBY.equalsIgnoreCase(platform);
+                    && !PropertiesConstant.DERBY.equalsIgnoreCase(platform)&&EnvUtil.isExternalDB(platform);
             setUseExternalDB(useExternalStorage);
-            
             // must initialize after setUseExternalDB
             // This value is true in stand-alone mode and false in cluster mode
             // If this value is set to true in cluster mode, nacos's distributed storage engine is turned on
