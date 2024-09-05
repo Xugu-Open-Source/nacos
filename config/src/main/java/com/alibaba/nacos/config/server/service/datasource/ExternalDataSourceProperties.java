@@ -87,8 +87,6 @@ public class ExternalDataSourceProperties {
             DataSourcePoolProperties poolProperties = DataSourcePoolProperties.build(environment);
             if (StringUtils.isBlank(this.jdbcDriverName)&&StringUtils.isEmpty(poolProperties.getDataSource().getDriverClassName())) {
                 poolProperties.setDriverClassName(JDBC_DRIVER_NAME);
-            } else {
-                poolProperties.setDriverClassName(this.jdbcDriverName);
             }
             poolProperties.setJdbcUrl(url.get(index).trim());
             poolProperties.setUsername(getOrDefault(user, index, user.get(0)).trim());

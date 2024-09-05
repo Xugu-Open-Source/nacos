@@ -120,7 +120,7 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
     }
     
     @Override
-    public void removeConfigHistory(final Timestamp startTime) {
+    public void removeConfigHistory(final Timestamp startTime,final int limitSize) {
         HistoryConfigInfoMapper historyConfigInfoMapper = mapperManager.findMapper(
                 dataSourceService.getDataSourceType(), TableConstant.HIS_CONFIG_INFO);
         String sql = historyConfigInfoMapper.removeConfigHistory();
