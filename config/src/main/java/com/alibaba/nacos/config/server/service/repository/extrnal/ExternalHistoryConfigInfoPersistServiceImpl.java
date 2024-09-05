@@ -125,7 +125,7 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
                 dataSourceService.getDataSourceType(), TableConstant.HIS_CONFIG_INFO);
         String sql = historyConfigInfoMapper.removeConfigHistory();
         PaginationHelper<Object> paginationHelper = createPaginationHelper();
-        paginationHelper.updateLimit(sql, new Object[] {startTime, limitSize});
+        paginationHelper.updateLimit(sql, new Object[] {startTime});
     }
     
     @Override
