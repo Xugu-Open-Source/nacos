@@ -36,6 +36,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -104,7 +105,7 @@ public class ExternalConfigInfoBetaPersistServiceImpl implements ConfigInfoBetaP
             final String srcUser, final Timestamp time, final boolean notify) {
         try {
             addConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             updateConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
         }
     }
@@ -115,7 +116,7 @@ public class ExternalConfigInfoBetaPersistServiceImpl implements ConfigInfoBetaP
         try {
             addConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
             return true;
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             return updateConfigInfo4BetaCas(configInfo, betaIps, srcIp, null, time, notify);
         }
     }

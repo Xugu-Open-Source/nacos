@@ -52,6 +52,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -173,7 +174,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             Map<String, Object> configAdvanceInfo, boolean notify) {
         try {
             addConfigInfo(srcIp, srcUser, configInfo, time, configAdvanceInfo, notify);
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             updateConfigInfo(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
         }
     }
@@ -190,7 +191,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
         try {
             addConfigInfo(srcIp, srcUser, configInfo, time, configAdvanceInfo, notify);
             return true;
-        } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
+        } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
             return updateConfigInfoCas(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
         }
     }
@@ -323,8 +324,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             try {
                 addConfigInfo(srcIp, srcUser, configInfo2Save, time, configAdvanceInfo, notify);
                 succCount++;
-            } catch (DataIntegrityViolationException ive) {
-                // uniqueness constraint conflict
+            } catch (DataIntegrityViolationException | UncategorizedSQLException ive) { // Unique constraint conflict
                 if (SameConfigPolicy.ABORT.equals(policy)) {
                     failData = new ArrayList<>();
                     skipData = new ArrayList<>();
