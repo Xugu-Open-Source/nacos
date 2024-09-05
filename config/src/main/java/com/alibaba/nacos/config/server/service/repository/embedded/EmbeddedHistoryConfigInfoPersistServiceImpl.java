@@ -119,12 +119,12 @@ public class EmbeddedHistoryConfigInfoPersistServiceImpl implements HistoryConfi
     }
     
     @Override
-    public void removeConfigHistory(final Timestamp startTime, final int limitSize) {
+    public void removeConfigHistory(final Timestamp startTime,final int limitSize) {
         HistoryConfigInfoMapper historyConfigInfoMapper = mapperManager.findMapper(
                 dataSourceService.getDataSourceType(), TableConstant.HIS_CONFIG_INFO);
         String sql = historyConfigInfoMapper.removeConfigHistory();
         PaginationHelper<ConfigInfo> helper = createPaginationHelper();
-        helper.updateLimit(sql, new Object[] {startTime, limitSize});
+        helper.updateLimit(sql, new Object[] {startTime});
     }
     
     @Override
