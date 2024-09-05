@@ -95,12 +95,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
-        
+
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.xugudb</groupId>
+            <artifactId>xugu-jdbc</artifactId>
         </dependency>
-        
         <!-- log -->
         <!-- log4j通过slf4j来代理 -->
         <dependency>

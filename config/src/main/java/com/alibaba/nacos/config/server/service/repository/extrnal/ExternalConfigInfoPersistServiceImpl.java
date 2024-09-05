@@ -53,6 +53,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -324,8 +325,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             try {
                 addConfigInfo(srcIp, srcUser, configInfo2Save, time, configAdvanceInfo, notify);
                 succCount++;
-            } catch (DataIntegrityViolationException ive) {
-                // uniqueness constraint conflict
+            } catch (DataIntegrityViolationException | UncategorizedSQLException ive) {                // uniqueness constraint conflict
                 if (SameConfigPolicy.ABORT.equals(policy)) {
                     failData = new ArrayList<>();
                     skipData = new ArrayList<>();

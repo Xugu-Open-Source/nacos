@@ -53,8 +53,8 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.xugudb</groupId>
+            <artifactId>xugu-jdbc</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.derby</groupId>
