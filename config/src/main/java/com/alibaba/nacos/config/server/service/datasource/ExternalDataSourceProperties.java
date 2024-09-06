@@ -39,7 +39,9 @@ public class ExternalDataSourceProperties {
     private static final String TEST_QUERY = "SELECT 1";
     
     private Integer num;
-    
+
+    private String jdbcDriverName;
+
     private List<String> url = new ArrayList<>();
     
     private List<String> user = new ArrayList<>();
@@ -61,7 +63,11 @@ public class ExternalDataSourceProperties {
     public void setPassword(List<String> password) {
         this.password = password;
     }
-    
+
+    public void setJdbcDriverName(String jdbcDriverName) {
+        this.jdbcDriverName = jdbcDriverName;
+    }
+
     /**
      * Build serveral HikariDataSource.
      *
@@ -82,6 +88,12 @@ public class ExternalDataSourceProperties {
             if (StringUtils.isEmpty(poolProperties.getDataSource().getDriverClassName())) {
                 poolProperties.setDriverClassName(JDBC_DRIVER_NAME);
             }
+            if (StringUtils.isBlank(this.jdbcDriverName) && StringUtils.isEmpty(poolProperties.getDataSource().getDriverClassName())) {
+                poolProperties.setDriverClassName(JDBC_DRIVER_NAME);
+            } else {
+                poolProperties.setDriverClassName(this.jdbcDriverName);
+            }
+
             poolProperties.setJdbcUrl(url.get(index).trim());
             poolProperties.setUsername(getOrDefault(user, index, user.get(0)).trim());
             poolProperties.setPassword(getOrDefault(password, index, password.get(0)).trim());

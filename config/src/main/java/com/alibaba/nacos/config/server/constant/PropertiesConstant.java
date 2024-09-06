@@ -63,7 +63,7 @@ public class PropertiesConstant {
     public static final String MYSQL = "mysql";
     
     public static final String DERBY = "derby";
-    
+
     public static final String EMPTY_DATASOURCE_PLATFORM = "";
     
     public static final String EMBEDDED_STORAGE = "embeddedStorage";
