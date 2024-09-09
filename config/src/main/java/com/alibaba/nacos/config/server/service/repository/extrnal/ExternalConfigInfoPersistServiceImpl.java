@@ -60,6 +60,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -196,7 +197,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
         } catch (DuplicateKeyException ignore) {
             // Must be unique constraint conflict.
             return updateConfigInfo(configInfo, srcIp, srcUser, configAdvanceInfo);
-        } catch (DataIntegrityViolationException dive) {
+        } catch (UncategorizedSQLException | DataIntegrityViolationException dive) {
             // Might be unique constraint conflict or some of other data integrity violation. try to update.
             try {
                 return updateConfigInfo(configInfo, srcIp, srcUser, configAdvanceInfo);
@@ -207,6 +208,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
                 throw e;
             }
         }
+
     }
     
     @Override

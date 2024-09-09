@@ -96,7 +96,14 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        
+        <dependency>
+            <groupId>com.xugudb</groupId>
+            <artifactId>xugu-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cae</groupId>
+            <artifactId>cae-jdbc</artifactId>
+        </dependency>
         <!-- log -->
         <!-- log4j通过slf4j来代理 -->
         <dependency>

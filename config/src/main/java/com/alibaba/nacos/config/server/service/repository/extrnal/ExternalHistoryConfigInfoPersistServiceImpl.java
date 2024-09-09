@@ -32,6 +32,7 @@ import com.alibaba.nacos.config.server.utils.LogUtil;
 import com.alibaba.nacos.persistence.repository.extrnal.ExternalStoragePaginationHelperImpl;
 import com.alibaba.nacos.plugin.datasource.MapperManager;
 import com.alibaba.nacos.plugin.datasource.constants.CommonConstant;
+import com.alibaba.nacos.plugin.datasource.constants.DataSourceConstant;
 import com.alibaba.nacos.plugin.datasource.constants.FieldConstant;
 import com.alibaba.nacos.plugin.datasource.constants.TableConstant;
 import com.alibaba.nacos.plugin.datasource.mapper.HistoryConfigInfoMapper;
@@ -66,15 +67,15 @@ import static com.alibaba.nacos.config.server.service.repository.ConfigRowMapper
 @Conditional(value = ConditionOnExternalStorage.class)
 @Service("externalHistoryConfigInfoPersistServiceImpl")
 public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfigInfoPersistService {
-    
+
     private DataSourceService dataSourceService;
-    
+
     protected JdbcTemplate jt;
-    
+
     protected TransactionTemplate tjt;
-    
+
     private MapperManager mapperManager;
-    
+
     public ExternalHistoryConfigInfoPersistServiceImpl() {
         this.dataSourceService = DynamicDataSource.getInstance().getDataSource();
         this.jt = dataSourceService.getJdbcTemplate();
@@ -83,12 +84,12 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
                 false);
         this.mapperManager = MapperManager.instance(isDataSourceLogEnable);
     }
-    
+
     @Override
     public <E> PaginationHelper<E> createPaginationHelper() {
         return new ExternalStoragePaginationHelperImpl<>(jt);
     }
-    
+
     @Override
     public List<ConfigInfoWrapper> convertDeletedConfig(List<Map<String, Object>> list) {
         List<ConfigInfoWrapper> configs = new ArrayList<>();
@@ -108,15 +109,15 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
         }
         return configs;
     }
-    
+
     @Override
     public void insertConfigHistoryAtomic(long id, ConfigInfo configInfo, String srcIp, String srcUser,
-            final Timestamp time, String ops) {
+                                          final Timestamp time, String ops) {
         String appNameTmp = StringUtils.defaultEmptyIfBlank(configInfo.getAppName());
         String tenantTmp = StringUtils.defaultEmptyIfBlank(configInfo.getTenant());
         final String md5Tmp = MD5Utils.md5Hex(configInfo.getContent(), Constants.ENCODE);
         String encryptedDataKey = StringUtils.defaultEmptyIfBlank(configInfo.getEncryptedDataKey());
-        
+
         try {
             HistoryConfigInfoMapper historyConfigInfoMapper = mapperManager.findMapper(
                     dataSourceService.getDataSourceType(), TableConstant.HIS_CONFIG_INFO);
@@ -130,19 +131,24 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
             throw e;
         }
     }
-    
+
     @Override
     public void removeConfigHistory(final Timestamp startTime, final int limitSize) {
-        HistoryConfigInfoMapper historyConfigInfoMapper = mapperManager.findMapper(
-                dataSourceService.getDataSourceType(), TableConstant.HIS_CONFIG_INFO);
+        HistoryConfigInfoMapper historyConfigInfoMapper;
         MapperContext context = new MapperContext();
-        context.putWhereParameter(FieldConstant.GMT_MODIFIED, startTime);
-        context.putWhereParameter(FieldConstant.LIMIT_SIZE, limitSize);
+        if (Arrays.asList(DataSourceConstant.XUGU,DataSourceConstant.CAE).contains(dataSourceService.getDataSourceType())) {
+            historyConfigInfoMapper= mapperManager.findMapper(DataSourceConstant.XUGU, TableConstant.HIS_CONFIG_INFO);
+            context.putWhereParameter(FieldConstant.GMT_MODIFIED, startTime);
+        }else {
+            historyConfigInfoMapper = mapperManager.findMapper(dataSourceService.getDataSourceType(), TableConstant.HIS_CONFIG_INFO);
+            context.putWhereParameter(FieldConstant.GMT_MODIFIED, startTime);
+            context.putWhereParameter(FieldConstant.LIMIT_SIZE, limitSize);
+        }
         MapperResult mapperResult = historyConfigInfoMapper.removeConfigHistory(context);
         PaginationHelper<Object> paginationHelper = createPaginationHelper();
         paginationHelper.updateLimit(mapperResult.getSql(), mapperResult.getParamList().toArray());
     }
-    
+
     @Override
     public List<ConfigInfoWrapper> findDeletedConfig(final Timestamp startTime, long startId, int pageSize) {
         try {
@@ -152,7 +158,7 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
             context.putWhereParameter(FieldConstant.START_TIME, startTime);
             context.putWhereParameter(FieldConstant.PAGE_SIZE, pageSize);
             context.putWhereParameter(FieldConstant.LAST_MAX_ID, startId);
-            
+
             MapperResult mapperResult = historyConfigInfoMapper.findDeletedConfig(context);
             List<Map<String, Object>> list = jt.queryForList(mapperResult.getSql(),
                     mapperResult.getParamList().toArray());
@@ -162,24 +168,24 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
             throw e;
         }
     }
-    
+
     @Override
     public Page<ConfigHistoryInfo> findConfigHistory(String dataId, String group, String tenant, int pageNo,
-            int pageSize) {
+                                                     int pageSize) {
         PaginationHelper<ConfigHistoryInfo> helper = createPaginationHelper();
         String tenantTmp = StringUtils.isBlank(tenant) ? StringUtils.EMPTY : tenant;
-        
+
         MapperContext context = new MapperContext((pageNo - 1) * pageSize, pageSize);
         context.putWhereParameter(FieldConstant.DATA_ID, dataId);
         context.putWhereParameter(FieldConstant.GROUP_ID, group);
         context.putWhereParameter(FieldConstant.TENANT_ID, tenantTmp);
-        
+
         HistoryConfigInfoMapper historyConfigInfoMapper = mapperManager.findMapper(
                 dataSourceService.getDataSourceType(), TableConstant.HIS_CONFIG_INFO);
-        
+
         String sqlCountRows = historyConfigInfoMapper.count(Arrays.asList("data_id", "group_id", "tenant_id"));
         MapperResult sqlFetchRows = historyConfigInfoMapper.pageFindConfigHistoryFetchRows(context);
-        
+
         Page<ConfigHistoryInfo> page;
         try {
             page = helper.fetchPage(sqlCountRows, sqlFetchRows.getSql(), sqlFetchRows.getParamList().toArray(), pageNo,
@@ -191,7 +197,7 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
         }
         return page;
     }
-    
+
     @Override
     public ConfigHistoryInfo detailConfigHistory(Long nid) {
         HistoryConfigInfoMapper historyConfigInfoMapper = mapperManager.findMapper(
@@ -209,7 +215,7 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
             throw e;
         }
     }
-    
+
     @Override
     public ConfigHistoryInfo detailPreviousConfigHistory(Long id) {
         HistoryConfigInfoMapper historyConfigInfoMapper = mapperManager.findMapper(
@@ -226,14 +232,14 @@ public class ExternalHistoryConfigInfoPersistServiceImpl implements HistoryConfi
             throw e;
         }
     }
-    
+
     @Override
     public int findConfigHistoryCountByTime(final Timestamp startTime) {
         HistoryConfigInfoMapper historyConfigInfoMapper = mapperManager.findMapper(
                 dataSourceService.getDataSourceType(), TableConstant.HIS_CONFIG_INFO);
         MapperContext context = new MapperContext();
         context.putWhereParameter(FieldConstant.START_TIME, startTime);
-        
+
         MapperResult mapperResult = historyConfigInfoMapper.findConfigHistoryCountByTime(context);
         Integer result = jt.queryForObject(mapperResult.getSql(), mapperResult.getParamList().toArray(), Integer.class);
         if (result == null) {
