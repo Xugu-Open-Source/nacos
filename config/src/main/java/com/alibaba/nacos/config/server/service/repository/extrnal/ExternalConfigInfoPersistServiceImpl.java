@@ -101,6 +101,8 @@ import static com.alibaba.nacos.config.server.service.repository.ConfigRowMapper
 @Conditional(value = ConditionOnExternalStorage.class)
 @Service("externalConfigInfoPersistServiceImpl")
 public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistService {
+
+    private static final String XUGU_ERROR_CODE = "E13001";
     
     private static final String DATA_ID = "dataId";
     
@@ -205,6 +207,12 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
                         .error("[db-error] try to update config failed, with DataIntegrityViolationException, {}",
                                 dive.getMessage(), e);
                 throw e;
+            }
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                return updateConfigInfo(configInfo, srcIp, srcUser, configAdvanceInfo);
+            } else {
+                throw new RuntimeException(ive.getMessage());
             }
         }
     }
