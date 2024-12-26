@@ -61,7 +61,7 @@ public class PageHandlerAdapterFactory {
         // DefaultPageHandlerAdapter
         addHandlerAdapter.accept(new DefaultPageHandlerAdapter());
         // xuguPageHandlerAdapter
-        addHandlerAdapter(new XuguPageHandlerAdapter());
+        addHandlerAdapter.accept(new XuguPageHandlerAdapter());
         this.handlerAdapters = Collections.unmodifiableList(handlerAdapters);
         this.handlerAdapterMap = Collections.unmodifiableMap(handlerAdapterMap);
     }
