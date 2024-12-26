@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package com.alibaba.nacos.plugin.datasource.constants;
+package com.alibaba.nacos.plugin.datasource.impl.xugu;
+
+import com.alibaba.nacos.plugin.datasource.constants.DataSourceConstant;
+import com.alibaba.nacos.plugin.datasource.mapper.AbstractMapper;
+import com.alibaba.nacos.plugin.datasource.mapper.TenantInfoMapper;
 
 /**
- * The data source name.
+ * The xugu implementation of TenantInfoMapper.
  *
- * @author hyx
+ * @author lhm
  **/
 
-public class DataSourceConstant {
-    public static final String MYSQL = "mysql";
-    
-    public static final String DERBY = "derby";
+public class TenantInfoMapperByXuGu extends AbstractMapper implements TenantInfoMapper {
 
-    public static final String XUGU = "xugu";
+    @Override
+    public String getDataSource() {
+        return DataSourceConstant.XUGU;
+    }
 }

@@ -93,7 +93,9 @@ import static com.alibaba.nacos.config.server.service.repository.ConfigRowMapper
 @Conditional(value = ConditionOnExternalStorage.class)
 @Service("externalConfigInfoPersistServiceImpl")
 public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistService {
-    
+
+    private static final String XUGU_ERROR_CODE = "E13001";
+
     /**
      * constant variables.
      */
@@ -181,7 +183,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             } else {
                 return updateConfigInfo(configInfo, srcIp, srcUser, configAdvanceInfo);
             }
-            
+
         } catch (Exception exception) {
             LogUtil.FATAL_LOG.error("[db-error] try to update or add config failed, {}", exception.getMessage(),
                     exception);
@@ -200,7 +202,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             } else {
                 return updateConfigInfoCas(configInfo, srcIp, srcUser, configAdvanceInfo);
             }
-            
+
         } catch (Exception exception) {
             LogUtil.FATAL_LOG.error("[db-error] try to update or add config failed, {}", exception.getMessage(),
                     exception);
@@ -211,9 +213,9 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
     @Override
     public long addConfigInfoAtomic(final long configId, final String srcIp, final String srcUser,
             final ConfigInfo configInfo, Map<String, Object> configAdvanceInfo) {
-        
+
         KeyHolder keyHolder = ExternalStorageUtils.createKeyHolder();
-        
+
         ConfigInfoMapper configInfoMapper = mapperManager.findMapper(dataSourceService.getDataSourceType(),
                 TableConstant.CONFIG_INFO);
         try {
@@ -230,11 +232,11 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             throw e;
         }
     }
-    
+
     PreparedStatement createPsForInsertConfigInfo(final String srcIp, final String srcUser, final ConfigInfo configInfo,
             Map<String, Object> configAdvanceInfo, Connection connection, ConfigInfoMapper configInfoMapper)
             throws SQLException {
-        
+
         Timestamp now = new Timestamp(System.currentTimeMillis());
         final String appNameTmp = StringUtils.defaultEmptyIfBlank(configInfo.getAppName());
         final String tenantTmp = StringUtils.defaultEmptyIfBlank(configInfo.getTenant());
@@ -377,7 +379,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
                     updateConfigInfo(configInfo2Save, srcIp, srcUser, configAdvanceInfo);
                 }
             }
-            
+
         }
         Map<String, Object> result = new HashMap<>(4);
         result.put("succCount", succCount);
@@ -673,7 +675,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             throw e;
         }
     }
-    
+
     @Override
     public long findConfigMaxId() {
         ConfigInfoMapper configInfoMapper = mapperManager.findMapper(dataSourceService.getDataSourceType(),
@@ -686,7 +688,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             return 0;
         }
     }
-    
+
     @Override
     public ConfigInfo findConfigInfo(long id) {
         try {
@@ -777,7 +779,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             throw e;
         }
     }
-    
+
     @Override
     public int configInfoCount() {
         ConfigInfoMapper configInfoMapper = mapperManager.findMapper(dataSourceService.getDataSourceType(),
@@ -918,7 +920,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             throw e;
         }
     }
-    
+
     @Override
     public List<String> selectTagByConfig(String dataId, String group, String tenant) {
         ConfigTagsRelationMapper configTagsRelationMapper = mapperManager.findMapper(
@@ -1025,7 +1027,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             throw e;
         }
     }
-    
+
     @Override
     public ConfigInfoStateWrapper findConfigInfoState(final String dataId, final String group, final String tenant) {
         String tenantTmp = StringUtils.isBlank(tenant) ? StringUtils.EMPTY : tenant;
@@ -1092,5 +1094,5 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             throw e;
         }
     }
-    
+
 }
