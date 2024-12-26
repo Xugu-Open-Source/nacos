@@ -16,9 +16,8 @@
 
 package com.alibaba.nacos.plugin.datasource.impl.xugu;
 
-
- import com.alibaba.nacos.plugin.datasource.enums.xugu.TrustedXuGuFunctionEnum;
- import com.alibaba.nacos.plugin.datasource.mapper.AbstractMapper;
+import com.alibaba.nacos.plugin.datasource.enums.xugu.TrustedXuGuFunctionEnum;
+import com.alibaba.nacos.plugin.datasource.mapper.AbstractMapper;
 
 /**
  * The abstract mysql mapper contains CRUD methods.
