@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author lhm
  **/
-public class ConfigInfoAggrMapperByXuGu extends AbstractMapper implements ConfigInfoAggrMapper {
+public class ConfigInfoAggrMapperByXuGu extends AbstractMapperByXuGu implements ConfigInfoAggrMapper {
     
     @Override
     public MapperResult findConfigInfoAggrByPageFetchRows(MapperContext context) {

@@ -16,20 +16,19 @@
 
 package com.alibaba.nacos.plugin.datasource.impl.xugu;
 
-import com.alibaba.nacos.plugin.datasource.constants.DataSourceConstant;
-import com.alibaba.nacos.plugin.datasource.mapper.AbstractMapper;
-import com.alibaba.nacos.plugin.datasource.mapper.TenantInfoMapper;
+
+ import com.alibaba.nacos.plugin.datasource.enums.xugu.TrustedXuGuFunctionEnum;
+ import com.alibaba.nacos.plugin.datasource.mapper.AbstractMapper;
 
 /**
- * The xugu implementation of TenantInfoMapper.
+ * The abstract mysql mapper contains CRUD methods.
  *
- * @author lhm
+ * @author blake.qiu
  **/
-
-public class TenantInfoMapperByXuGu extends AbstractMapperByXuGu implements TenantInfoMapper {
+public abstract class AbstractMapperByXuGu extends AbstractMapper {
 
     @Override
-    public String getDataSource() {
-        return DataSourceConstant.XUGU;
+    public String getFunction(String functionName) {
+        return TrustedXuGuFunctionEnum.getFunctionByName(functionName);
     }
 }

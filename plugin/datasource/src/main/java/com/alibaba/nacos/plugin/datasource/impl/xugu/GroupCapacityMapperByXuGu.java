@@ -29,7 +29,7 @@ import com.alibaba.nacos.plugin.datasource.model.MapperResult;
  *
  * @author lhm
  */
-public class GroupCapacityMapperByXuGu extends AbstractMapper implements GroupCapacityMapper {
+public class GroupCapacityMapperByXuGu extends AbstractMapperByXuGu implements GroupCapacityMapper {
     
     @Override
     public String getDataSource() {

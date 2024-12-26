@@ -31,7 +31,7 @@ import java.util.List;
  * @author lhm
  **/
 
-public class ConfigInfoBetaMapperByXuGu extends AbstractMapper implements ConfigInfoBetaMapper {
+public class ConfigInfoBetaMapperByXuGu extends AbstractMapperByXuGu implements ConfigInfoBetaMapper {
 
     @Override
     public MapperResult findAllConfigInfoBetaForDumpAllFetchRows(MapperContext context) {

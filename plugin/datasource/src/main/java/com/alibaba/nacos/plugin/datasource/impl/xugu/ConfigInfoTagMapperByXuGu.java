@@ -30,7 +30,7 @@ import java.util.Collections;
  * @author lhm
  **/
 
-public class ConfigInfoTagMapperByXuGu extends AbstractMapper implements ConfigInfoTagMapper {
+public class ConfigInfoTagMapperByXuGu extends AbstractMapperByXuGu implements ConfigInfoTagMapper {
     
     @Override
     public MapperResult findAllConfigInfoTagForDumpAllFetchRows(MapperContext context) {

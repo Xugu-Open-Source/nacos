@@ -37,7 +37,7 @@ import java.util.List;
  * @author lhm
  **/
 
-public class ConfigInfoMapperByXuGu extends AbstractMapper implements ConfigInfoMapper {
+public class ConfigInfoMapperByXuGu extends AbstractMapperByXuGu implements ConfigInfoMapper {
     
     private static final String DATA_ID = "dataId";
     

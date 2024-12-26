@@ -33,7 +33,7 @@ import java.util.List;
  * @author lhm
  **/
 
-public class ConfigTagsRelationMapperByXuGu extends AbstractMapper implements ConfigTagsRelationMapper {
+public class ConfigTagsRelationMapperByXuGu extends AbstractMapperByXuGu implements ConfigTagsRelationMapper {
     
     @Override
     public MapperResult findConfigInfo4PageFetchRows(MapperContext context) {

@@ -30,7 +30,7 @@ import com.alibaba.nacos.plugin.datasource.model.MapperResult;
  * @author lhm
  **/
 
-public class TenantCapacityMapperByXuGu extends AbstractMapper implements TenantCapacityMapper {
+public class TenantCapacityMapperByXuGu extends AbstractMapperByXuGu implements TenantCapacityMapper {
     
     @Override
     public String getDataSource() {

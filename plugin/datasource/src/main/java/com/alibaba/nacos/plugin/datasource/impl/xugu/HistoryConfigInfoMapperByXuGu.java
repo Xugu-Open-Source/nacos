@@ -30,7 +30,7 @@ import com.alibaba.nacos.plugin.datasource.model.MapperResult;
  * @author lhm
  **/
 
-public class HistoryConfigInfoMapperByXuGu extends AbstractMapper implements HistoryConfigInfoMapper {
+public class HistoryConfigInfoMapperByXuGu extends AbstractMapperByXuGu implements HistoryConfigInfoMapper {
     
     @Override
     public MapperResult removeConfigHistory(MapperContext context) {
