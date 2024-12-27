@@ -137,6 +137,7 @@
         <log4j.version>2.17.1</log4j.version>
         
         <mysql-connector-java.version>8.2.0</mysql-connector-java.version>
+        <xugu-jdbc.version>12.3.2</xugu-jdbc.version>
         <derby.version>10.14.2.0</derby.version>
         <jjwt.version>0.11.2</jjwt.version>
         <grpc-java.version>1.64.2</grpc-java.version>
@@ -150,7 +151,7 @@
         <rpc-grpc-impl.version>${jraft-core.version}</rpc-grpc-impl.version>
         <SnakeYaml.version>2.0</SnakeYaml.version>
         <junit5.version>5.10.2</junit5.version>
-        
+
         <!-- override dependency version -->
         <spring.version>5.3.39</spring.version>
         <spring-security.version>5.7.12</spring-security.version>
@@ -723,7 +724,7 @@
                 <artifactId>tomcat-embed-websocket</artifactId>
                 <version>${tomcat.version}</version>
             </dependency>
-            
+
             <!-- Internal libs -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -945,7 +946,13 @@
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql-connector-java.version}</version>
             </dependency>
-            
+
+            <dependency>
+                <groupId>com.xugudb</groupId>
+                <artifactId>xugu-jdbc</artifactId>
+                <version>${xugu-jdbc.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derby</artifactId>
@@ -1052,7 +1059,7 @@
                 <artifactId>protobuf-java</artifactId>
                 <version>${protobuf-java.version}</version>
             </dependency>
-            
+
             
             <dependency>
                 <groupId>com.google.code.gson</groupId>
