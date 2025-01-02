@@ -65,6 +65,10 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.xugudb</groupId>
+            <artifactId>xugu-jdbc</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
         </dependency>
