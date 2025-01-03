@@ -274,7 +274,7 @@ public class PropertyUtil implements ApplicationContextInitializer<ConfigurableA
             setInitialExpansionPercent(getInt("initialExpansionPercent", initialExpansionPercent));
             
             // External data sources are used by default in cluster mode
-            setUseExternalDB("mysql|xugu".contains(getString("spring.datasource.platform", "")));
+            setUseExternalDB("mysql|xugu".contains(getString("spring.datasource.platform", "").toLowerCase()));
             
             // must initialize after setUseExternalDB
             // This value is true in stand-alone mode and false in cluster mode
