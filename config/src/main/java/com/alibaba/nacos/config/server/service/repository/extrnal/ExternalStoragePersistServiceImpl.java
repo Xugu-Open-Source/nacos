@@ -101,11 +101,13 @@ import static com.alibaba.nacos.config.server.service.repository.RowMapperManage
 @Conditional(value = ConditionOnExternalStorage.class)
 @Component
 public class ExternalStoragePersistServiceImpl implements PersistService {
-    
+
+    private static final String XUGU_ERROR_CODE = "E13001";
+
     private DataSourceService dataSourceService;
     
     private static final String SQL_FIND_ALL_CONFIG_INFO = "SELECT id,data_id,group_id,tenant_id,app_name,content,type,md5,gmt_create,gmt_modified,src_user,src_ip,c_desc,c_use,effect,c_schema FROM config_info";
-    
+
     private static final String SQL_TENANT_INFO_COUNT_BY_TENANT_ID = "SELECT count(*) FROM tenant_info WHERE tenant_id = ?";
     
     private static final String SQL_FIND_CONFIG_INFO_BY_IDS = "SELECT ID,data_id,group_id,tenant_id,app_name,content,md5 FROM config_info WHERE ";
@@ -371,6 +373,12 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             addConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
         } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
             updateConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                updateConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
@@ -392,6 +400,12 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             addConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
         } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
             updateConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                updateConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
@@ -432,6 +446,12 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             addConfigInfo(srcIp, srcUser, configInfo, time, configAdvanceInfo, notify);
         } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
             updateConfigInfo(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                updateConfigInfo(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
@@ -458,6 +478,12 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             addConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
         } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
             updateConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                updateConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
@@ -932,7 +958,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             sql = new StringBuilder(
                     "SELECT a.id,a.data_id,a.group_id,a.tenant_id,a.app_name,a.content FROM config_info  a LEFT JOIN "
                             + "config_tags_relation b ON a.id=b.id WHERE a.data_id=? AND a.tenant_id=? ");
-            
+
             sqlCount.append(" AND b.tag_name IN (");
             sql.append(" AND b.tag_name IN (");
             String[] tagArr = configTags.split(",");
@@ -1099,7 +1125,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             sql = new StringBuilder(
                     "SELECT a.id,a.data_id,a.group_id,a.tenant_id,a.app_name,a.content FROM config_info  a LEFT JOIN "
                             + "config_tags_relation b ON a.id=b.id WHERE a.group_id=? AND a.tenant_id=? ");
-            
+
             sqlCount.append(" AND b.tag_name IN (");
             sql.append(" AND b.tag_name IN (");
             String[] tagArr = configTags.split(",");
@@ -1171,7 +1197,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             sql = new StringBuilder(
                     "SELECT a.id,a.data_id,a.group_id,a.tenant_id,a.app_name,a.content FROM config_info  a LEFT JOIN "
                             + "config_tags_relation b ON a.id=b.id WHERE a.tenant_id=? ");
-            
+
             sqlCount.append(" AND b.tag_name IN (");
             sql.append(" AND b.tag_name IN (");
             String[] tagArr = configTags.split(",");
@@ -1308,7 +1334,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             sql.append('?');
         }
         sql.append(')');
-        
+
         List<Object> objectList = com.alibaba.nacos.common.utils.CollectionUtils.list(dataId, group, tenantTmp);
         objectList.addAll(datumIds);
         Integer result = jt.queryForObject(sql.toString(), Integer.class, objectList.toArray());
@@ -1683,7 +1709,7 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
         if (StringUtils.isNotBlank(configTags)) {
             sqlCountRows = "SELECT count(*) FROM config_info  a LEFT JOIN config_tags_relation b ON a.id=b.id ";
             sqlFetchRows = "SELECT a.id,a.data_id,a.group_id,a.tenant_id,a.app_name,a.content FROM config_info a LEFT JOIN config_tags_relation b ON a.id=b.id ";
-            
+
             where.append(" a.tenant_id LIKE ? ");
             if (!StringUtils.isBlank(dataId)) {
                 where.append(" AND a.data_id LIKE ? ");

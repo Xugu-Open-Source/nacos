@@ -43,17 +43,17 @@ import static com.alibaba.nacos.config.server.service.repository.RowMapperManage
 @Conditional(value = ConditionOnExternalStorage.class)
 @Component
 public class ExternalUserPersistServiceImpl implements UserPersistService {
-    
+
     @Autowired
     private ExternalStoragePersistServiceImpl persistService;
-    
+
     private JdbcTemplate jt;
-    
+
     @PostConstruct
     protected void init() {
         jt = persistService.getJdbcTemplate();
     }
-    
+
     /**
      * Execute create user operation.
      *
@@ -71,7 +71,7 @@ public class ExternalUserPersistServiceImpl implements UserPersistService {
             throw e;
         }
     }
-    
+
     /**
      * Execute delete user operation.
      *
@@ -87,7 +87,7 @@ public class ExternalUserPersistServiceImpl implements UserPersistService {
             throw e;
         }
     }
-    
+
     /**
      * Execute update user password operation.
      *
@@ -103,7 +103,7 @@ public class ExternalUserPersistServiceImpl implements UserPersistService {
             throw e;
         }
     }
-    
+
     /**
      * Execute find user by username operation.
      *
@@ -128,7 +128,7 @@ public class ExternalUserPersistServiceImpl implements UserPersistService {
     
     @Override
     public Page<User> getUsers(int pageNo, int pageSize) {
-        
+
         PaginationHelper<User> helper = persistService.createPaginationHelper();
         
         String sqlCountRows = "SELECT count(*) FROM users WHERE ";
@@ -136,7 +136,7 @@ public class ExternalUserPersistServiceImpl implements UserPersistService {
         String sqlFetchRows = "SELECT username,password FROM users WHERE ";
         
         String where = " 1=1 ";
-        
+
         try {
             Page<User> pageInfo = helper
                     .fetchPage(sqlCountRows + where, sqlFetchRows + where, new ArrayList<String>().toArray(), pageNo,
@@ -155,7 +155,7 @@ public class ExternalUserPersistServiceImpl implements UserPersistService {
 
     @Override
     public List<String> findUserLikeUsername(String username) {
-        String sql = "SELECT username FROM users WHERE username LIKE '%' ? '%'";
+        String sql = "SELECT username FROM users WHERE username LIKE CONCAT('%',?,'%')";
         List<String> users = this.jt.queryForList(sql, new String[]{username}, String.class);
         return users;
     }
