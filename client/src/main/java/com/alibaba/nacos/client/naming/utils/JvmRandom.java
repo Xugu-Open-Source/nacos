@@ -33,28 +33,28 @@ import java.util.Random;
  * @since 2.0
  */
 public final class JvmRandom extends Random {
-    
+
     /**
      * Required for serialization support.
      *
      * @see java.io.Serializable
      */
     private static final long serialVersionUID = 1L;
-    
+
     private static final Random SHARED_RANDOM = new Random();
-    
+
     /**
      * Ensures that only the parent constructor can call reseed.
      */
     private boolean constructed = false;
-    
+
     /**
      * Constructs a new instance.
      */
     public JvmRandom() {
         this.constructed = true;
     }
-    
+
     /**
      * Unsupported in 2.0.
      *
@@ -67,7 +67,7 @@ public final class JvmRandom extends Random {
             throw new UnsupportedOperationException();
         }
     }
-    
+
     /**
      * Unsupported in 2.0.
      *
@@ -78,7 +78,7 @@ public final class JvmRandom extends Random {
     public synchronized double nextGaussian() {
         throw new UnsupportedOperationException();
     }
-    
+
     /**
      * Unsupported in 2.0.
      *
@@ -89,7 +89,7 @@ public final class JvmRandom extends Random {
     public void nextBytes(byte[] byteArray) {
         throw new UnsupportedOperationException();
     }
-    
+
     /**
      * <p>Returns the next pseudorandom, uniformly distributed int value from the Math.random() sequence.</p> Identical
      * to <code>nextInt(Integer.MAX_VALUE)</code> <p> <b>N.B. All values are >= 0.</b> </p>
@@ -100,7 +100,7 @@ public final class JvmRandom extends Random {
     public int nextInt() {
         return nextInt(Integer.MAX_VALUE);
     }
-    
+
     /**
      * <p>Returns a pseudorandom, uniformly distributed int value between <code>0</code> (inclusive) and the specified
      * value (exclusive), from the Math.random() sequence.</p>
@@ -113,7 +113,7 @@ public final class JvmRandom extends Random {
     public int nextInt(int n) {
         return SHARED_RANDOM.nextInt(n);
     }
-    
+
     /**
      * <p>Returns the next pseudorandom, uniformly distributed long value from the Math.random() sequence.</p>
      * Identical
@@ -125,7 +125,7 @@ public final class JvmRandom extends Random {
     public long nextLong() {
         return nextLong(Long.MAX_VALUE);
     }
-    
+
     /**
      * <p>Returns a pseudorandom, uniformly distributed long value between <code>0</code> (inclusive) and the specified
      * value (exclusive), from the Math.random() sequence.</p>
@@ -134,7 +134,7 @@ public final class JvmRandom extends Random {
      * @return the random long
      * @throws IllegalArgumentException when <code>n &lt;= 0</code>
      */
-    public static long nextLong(long n) {
+    public long nextLong(long n) {
         if (n <= 0) {
             throw new IllegalArgumentException("Upper bound for nextInt must be positive");
         }
@@ -154,7 +154,7 @@ public final class JvmRandom extends Random {
         } while (bits - val + (n - 1) < 0);
         return val;
     }
-    
+
     /**
      * <p>Returns the next pseudorandom, uniformly distributed boolean value from the Math.random() sequence.</p>
      *
@@ -164,7 +164,7 @@ public final class JvmRandom extends Random {
     public boolean nextBoolean() {
         return SHARED_RANDOM.nextBoolean();
     }
-    
+
     /**
      * <p>Returns the next pseudorandom, uniformly distributed float value between <code>0.0</code> and
      * <code>1.0</code>
@@ -176,7 +176,7 @@ public final class JvmRandom extends Random {
     public float nextFloat() {
         return SHARED_RANDOM.nextFloat();
     }
-    
+
     /**
      * <p>Synonymous to the Math.random() call.</p>
      *
@@ -186,7 +186,7 @@ public final class JvmRandom extends Random {
     public double nextDouble() {
         return SHARED_RANDOM.nextDouble();
     }
-    
+
     /**
      * Get the next unsigned random long.
      *
@@ -196,7 +196,7 @@ public final class JvmRandom extends Random {
         // drop the sign bit to leave 63 random bits
         return SHARED_RANDOM.nextLong() & 0x7fffffffffffffffL;
     }
-    
+
     /**
      * Count the number of bits required to represent a long number.
      *
