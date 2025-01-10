@@ -46,12 +46,12 @@ import static com.alibaba.nacos.config.server.service.repository.RowMapperManage
 @Conditional(value = ConditionOnExternalStorage.class)
 @Component
 public class ExternalRolePersistServiceImpl implements RolePersistService {
-    
+
     @Autowired
     private ExternalStoragePersistServiceImpl persistService;
-    
+
     private JdbcTemplate jt;
-    
+
     @PostConstruct
     protected void init() {
         jt = persistService.getJdbcTemplate();
@@ -59,14 +59,14 @@ public class ExternalRolePersistServiceImpl implements RolePersistService {
     
     @Override
     public Page<RoleInfo> getRoles(int pageNo, int pageSize) {
-        
+
         PaginationHelper<RoleInfo> helper = persistService.createPaginationHelper();
-        
+
         String sqlCountRows = "select count(*) from (select distinct role from roles) roles where ";
         String sqlFetchRows = "select role,username from roles where ";
-        
+
         String where = " 1=1 ";
-        
+
         try {
             Page<RoleInfo> pageInfo = helper
                     .fetchPage(sqlCountRows + where, sqlFetchRows + where, new ArrayList<String>().toArray(), pageNo,
@@ -85,12 +85,12 @@ public class ExternalRolePersistServiceImpl implements RolePersistService {
     
     @Override
     public Page<RoleInfo> getRolesByUserName(String username, int pageNo, int pageSize) {
-        
+
         PaginationHelper<RoleInfo> helper = persistService.createPaginationHelper();
-        
+
         String sqlCountRows = "select count(*) from roles where ";
         String sqlFetchRows = "select role,username from roles where ";
-        
+
         String where = " username= ? ";
         List<String> params = new ArrayList<>();
         if (StringUtils.isNotBlank(username)) {
@@ -98,7 +98,7 @@ public class ExternalRolePersistServiceImpl implements RolePersistService {
         } else {
             where = " 1=1 ";
         }
-        
+
         try {
             return helper.fetchPage(sqlCountRows + where, sqlFetchRows + where, params.toArray(), pageNo, pageSize,
                     ROLE_INFO_ROW_MAPPER);
@@ -107,7 +107,7 @@ public class ExternalRolePersistServiceImpl implements RolePersistService {
             throw e;
         }
     }
-    
+
     /**
      * Execute add role operation.
      *
@@ -116,9 +116,9 @@ public class ExternalRolePersistServiceImpl implements RolePersistService {
      */
     @Override
     public void addRole(String role, String userName) {
-        
+
         String sql = "INSERT into roles (role, username) VALUES (?, ?)";
-        
+
         try {
             jt.update(sql, role, userName);
         } catch (CannotGetJdbcConnectionException e) {
@@ -126,7 +126,7 @@ public class ExternalRolePersistServiceImpl implements RolePersistService {
             throw e;
         }
     }
-    
+
     /**
      * Execute delete role operation.
      *
@@ -142,7 +142,7 @@ public class ExternalRolePersistServiceImpl implements RolePersistService {
             throw e;
         }
     }
-    
+
     /**
      * Execute delete role operation.
      *
@@ -159,16 +159,16 @@ public class ExternalRolePersistServiceImpl implements RolePersistService {
             throw e;
         }
     }
-    
+
     @Override
     public List<String> findRolesLikeRoleName(String role) {
-        String sql = "SELECT role FROM roles WHERE role like '%' ? '%'";
+        String sql = "SELECT role FROM roles WHERE role like CONCAT('%',?,'%')";
         List<String> users = this.jt.queryForList(sql, new String[] {role}, String.class);
         return users;
     }
-    
+
     private static final class RoleInfoRowMapper implements RowMapper<RoleInfo> {
-        
+
         @Override
         public RoleInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
             RoleInfo roleInfo = new RoleInfo();
