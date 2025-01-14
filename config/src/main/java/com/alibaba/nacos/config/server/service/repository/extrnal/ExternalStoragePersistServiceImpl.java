@@ -103,6 +103,8 @@ import static com.alibaba.nacos.config.server.service.repository.RowMapperManage
 @Conditional(value = ConditionOnExternalStorage.class)
 @Component
 public class ExternalStoragePersistServiceImpl implements PersistService {
+
+    private static final String XUGU_ERROR_CODE = "E13001";
     
     private DataSourceService dataSourceService;
     
@@ -378,6 +380,12 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             addConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
         } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
             updateConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                updateConfigInfo4Beta(configInfo, betaIps, srcIp, null, time, notify);
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
@@ -399,6 +407,12 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             addConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
         } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
             updateConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                updateConfigInfo4Tag(configInfo, tag, srcIp, null, time, notify);
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
@@ -439,6 +453,12 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             addConfigInfo(srcIp, srcUser, configInfo, time, configAdvanceInfo, notify);
         } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
             updateConfigInfo(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                updateConfigInfo(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
@@ -465,6 +485,12 @@ public class ExternalStoragePersistServiceImpl implements PersistService {
             addConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
         } catch (DataIntegrityViolationException ive) { // Unique constraint conflict
             updateConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                updateConfigSubAtomic(subInfo.getDataId(), subInfo.getGroup(), subInfo.getAppName(), subInfo.getDate());
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
