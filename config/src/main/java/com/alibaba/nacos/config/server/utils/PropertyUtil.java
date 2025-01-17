@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.Arrays;
+
 /**
  * Properties util.
  *
@@ -273,7 +275,8 @@ public class PropertyUtil implements ApplicationContextInitializer<ConfigurableA
             setCorrectUsageDelay(getInt("correctUsageDelay", correctUsageDelay));
             setInitialExpansionPercent(getInt("initialExpansionPercent", initialExpansionPercent));
             // External data sources are used by default in cluster mode
-            setUseExternalDB("mysql|xugu".contains(getString("spring.datasource.platform", "")));
+            setUseExternalDB(Arrays.asList("mysql", "xugu").contains(getString("spring.datasource.platform", "").toLowerCase()));
+
             // must initialize after setUseExternalDB
             // This value is true in stand-alone mode and false in cluster mode
             // If this value is set to true in cluster mode, nacos's distributed storage engine is turned on
