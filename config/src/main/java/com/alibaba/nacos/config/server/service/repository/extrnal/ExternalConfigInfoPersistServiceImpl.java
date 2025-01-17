@@ -202,7 +202,7 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             return updateConfigInfoCas(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
         } catch (RuntimeException ive) {
             if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
-               return updateConfigInfoCas(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
+                return updateConfigInfoCas(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
             } else {
                 throw new RuntimeException(ive.getMessage());
             }
