@@ -91,6 +91,8 @@ import static com.alibaba.nacos.config.server.service.repository.RowMapperManage
 @Conditional(value = ConditionOnExternalStorage.class)
 @Service("externalConfigInfoPersistServiceImpl")
 public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistService {
+
+    private static final String XUGU_ERROR_CODE = "E13001";
     
     private static final String DATA_ID = "dataId";
     
@@ -176,6 +178,12 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             addConfigInfo(srcIp, srcUser, configInfo, time, configAdvanceInfo, notify);
         } catch (DuplicateKeyException ive) { // Unique constraint conflict
             updateConfigInfo(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+                updateConfigInfo(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
@@ -193,6 +201,12 @@ public class ExternalConfigInfoPersistServiceImpl implements ConfigInfoPersistSe
             return true;
         } catch (DuplicateKeyException ignore) { // Unique constraint conflict
             return updateConfigInfoCas(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
+        } catch (RuntimeException ive) {
+            if (ive.getMessage().contains(XUGU_ERROR_CODE)) {
+               return updateConfigInfoCas(configInfo, srcIp, srcUser, time, configAdvanceInfo, notify);
+            } else {
+                throw new RuntimeException(ive.getMessage());
+            }
         }
     }
     
