@@ -1,26 +1,41 @@
+/*
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /******************************************/
 /*   数据库全名 = nacos_config   */
 /*   表名称 = config_info   */
 /******************************************/
 create table config_info
 (
-    id                 bigint       not null comment '主键ID',
-    data_id            varchar(255) not null comment 'data_id',
-    group_id           varchar(255),
-    content            clob         not null comment 'content',
-    md5                varchar(32) comment 'md5',
-    gmt_create         datetime     not null default CURRENT_TIMESTAMP comment '创建时间',
-    gmt_modified       datetime     not null default CURRENT_TIMESTAMP comment '修改时间',
-    src_user           clob comment 'source user',
-    src_ip             varchar(50) comment 'source ip',
-    app_name           varchar(128),
-    tenant_id          varchar(128)          default '' comment '租户字段',
-    c_desc             varchar(256),
-    c_use              varchar(64),
-    effect             varchar(64),
-    type               varchar(64),
-    c_schema           clob,
-    encrypted_data_key clob         not null COMMENT '秘钥'
+    id           bigint       not null comment 'id',
+    data_id      varchar(255) not null comment 'data_id',
+    group_id     varchar(255),
+    content      clob         not null comment 'content',
+    md5          varchar(32) comment 'md5',
+    gmt_create   datetime     not null default CURRENT_TIMESTAMP comment '创建时间',
+    gmt_modified datetime     not null default CURRENT_TIMESTAMP comment '修改时间',
+    src_user     clob comment 'source user',
+    src_ip       varchar(50) comment 'source ip',
+    app_name     varchar(128),
+    tenant_id    varchar(128)          default '' comment '租户字段',
+    c_desc       varchar(256),
+    c_use        varchar(64),
+    effect       varchar(64),
+    type         varchar(64),
+    c_schema     clob
 );
 comment
 on table config_info is 'config_info';
@@ -36,7 +51,7 @@ alter table config_info
 /******************************************/
 CREATE TABLE config_info_aggr
 (
-    id           bigint       not null comment '主键ID',
+    id           bigint       not null comment 'id',
     data_id      varchar(255) not null comment 'data_id',
     group_id     varchar(128) not null comment 'group_id',
     datum_id     varchar(255) not null comment 'datum_id',
@@ -57,19 +72,18 @@ alter table config_info_aggr
 /******************************************/
 CREATE TABLE config_info_beta
 (
-    id                 bigint       not null comment '主键ID',
-    data_id            varchar(255) not null comment 'data_id',
-    group_id           varchar(128) not null comment 'group_id',
-    app_name           varchar(128)          default null comment 'app_name',
-    content            clob         not null comment 'content',
-    beta_ips           varchar(1024)         default null comment 'betaIps',
-    md5                varchar(32)           DEFAULT NULL COMMENT 'md5',
-    gmt_create         datetime     not null default CURRENT_TIMESTAMP comment '创建时间',
-    gmt_modified       datetime     not null default CURRENT_TIMESTAMP comment '修改时间',
-    src_user           clob COMMENT 'source user',
-    src_ip             varchar(50) comment 'source ip',
-    tenant_id          varchar(128)          default '' comment '租户字段',
-    encrypted_data_key clob         not null COMMENT '秘钥'
+    id           bigint       not null comment 'id',
+    data_id      varchar(255) not null comment 'data_id',
+    group_id     varchar(128) not null comment 'group_id',
+    app_name     varchar(128)          default null comment 'app_name',
+    content      clob         not null comment 'content',
+    beta_ips     varchar(1024)         default null comment 'betaIps',
+    md5          varchar(32)           DEFAULT NULL COMMENT 'md5',
+    gmt_create   datetime     not null default CURRENT_TIMESTAMP comment '创建时间',
+    gmt_modified datetime     not null default CURRENT_TIMESTAMP comment '修改时间',
+    src_user     clob COMMENT 'source user',
+    src_ip       varchar(50) comment 'source ip',
+    tenant_id    varchar(128)          default '' comment '租户字段'
 );
 
 alter table config_info_beta alter column id BIGINT identity(1,1) primary key;
@@ -82,7 +96,7 @@ alter table config_info_beta
 /******************************************/
 CREATE TABLE config_info_tag
 (
-    id           bigint       not null comment '主键ID',
+    id           bigint       not null comment 'id',
     data_id      varchar(255) not null comment 'data_id',
     group_id     varchar(128) not null comment 'group_id',
     tenant_id    varchar(128)          default '' comment 'tenant_id',
@@ -112,7 +126,7 @@ CREATE TABLE config_tags_relation
     data_id   varchar(255) not null comment 'data_id',
     group_id  varchar(128) not null comment 'group_id',
     tenant_id varchar(128) default '' comment 'tenant_id',
-    nid       bigint       not null comment '主键ID'
+    nid       bigint       not null
 );
 alter table config_tags_relation alter column nid BIGINT identity(1,1) primary key;
 
@@ -151,20 +165,19 @@ create unique index UK_IDX_S22111164925885136 on group_capacity (group_id) index
 /******************************************/
 create table his_config_info
 (
-    id                 bigint       not null,
-    nid                bigint       not NULL comment '主键ID',
-    data_id            varchar(255) not null,
-    group_id           varchar(128) not null,
-    app_name           varchar(128) comment 'app_name',
-    content            clob         not null,
-    md5                varchar(32),
-    gmt_create         datetime     not null default CURRENT_TIMESTAMP,
-    gmt_modified       datetime     not null default CURRENT_TIMESTAMP,
-    src_user           clob,
-    src_ip             varchar(50),
-    op_type            varchar(10),
-    tenant_id          varchar(128)          default '' comment '租户字段',
-    encrypted_data_key clob         not null COMMENT '秘钥'
+    id           bigint       not null,
+    nid          bigint       not null,
+    data_id      varchar(255) not null,
+    group_id     varchar(128) not null,
+    app_name     varchar(128) comment 'app_name',
+    content      clob         not null,
+    md5          varchar(32),
+    gmt_create   datetime     not null default CURRENT_TIMESTAMP,
+    gmt_modified datetime     not null default CURRENT_TIMESTAMP,
+    src_user     clob,
+    src_ip       varchar(50),
+    op_type      varchar(10),
+    tenant_id    varchar(128)          default '' comment '租户字段'
 );
 comment
 on table his_config_info is '多租户改造';
@@ -206,7 +219,7 @@ create unique index UK_IDX_S16456164925885139 on tenant_capacity (tenant_id) ind
 
 create table tenant_info
 (
-    id            bigint       not null comment '主键ID',
+    id            bigint       not null comment 'id',
     kp            varchar(128) not null comment 'kp',
     tenant_id     varchar(128) default '' comment 'tenant_id',
     tenant_name   varchar(128) default '' comment 'tenant_name',
