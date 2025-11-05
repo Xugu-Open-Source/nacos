@@ -1,3 +1,18 @@
+/*
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 /******************************************/
 /*   数据库全名 = nacos_config   */
 /*   表名称 = config_info   */
@@ -22,8 +37,7 @@ create table config_info
     c_schema           clob,
     encrypted_data_key clob         not null COMMENT '秘钥'
 );
-comment
-on table config_info is 'config_info';
+comment on table config_info is 'config_info';
 -- Alter Table Add Identity --
 alter table config_info alter column id BIGINT identity(1,1) primary key;
 
@@ -32,25 +46,28 @@ alter table config_info
 
 /******************************************/
 /*   数据库全名 = nacos_config   */
-/*   表名称 = config_info_aggr   */
+/*   表名称 = config_info_gray   */
 /******************************************/
-CREATE TABLE config_info_aggr
-(
-    id           bigint       not null comment '主键ID',
-    data_id      varchar(255) not null comment 'data_id',
-    group_id     varchar(128) not null comment 'group_id',
-    datum_id     varchar(255) not null comment 'datum_id',
-    content      clob         not null comment '内容',
-    gmt_modified datetime     not null default CURRENT_TIMESTAMP comment '修改时间',
-    app_name     varchar(128)          default null comment 'app_name',
-    tenant_id    varchar(128)          DEFAULT '' COMMENT '租户字段'
-);
-
-alter table config_info_aggr alter column id BIGINT identity(1,1) primary key;
-
-alter table config_info_aggr
-    add constraint uk_configinfoaggr_datagrouptenantdatum unique (data_id, group_id, tenant_id, datum_id);
-
+CREATE TABLE config_info_gray (
+  id BIGINT AUTO_INCREMENT NOT NULL  COMMENT 'id',
+  data_id VARCHAR(255) NOT NULL COMMENT 'data_id',
+  group_id VARCHAR(128) NOT NULL COMMENT 'group_id',
+  content CLOB NOT NULL COMMENT 'content',
+  md5 VARCHAR(32) DEFAULT NULL COMMENT 'md5',
+  src_user CLOB COMMENT 'src_user',
+  src_ip VARCHAR(100) DEFAULT NULL COMMENT 'src_ip',
+  gmt_create DATETIME(3) DEFAULT now() NOT NULL COMMENT 'gmt_create',
+  gmt_modified DATETIME(3) DEFAULT now() NOT NULL COMMENT 'gmt_modified',
+  app_name VARCHAR(128) DEFAULT NULL COMMENT 'app_name',
+  tenant_id VARCHAR(128) DEFAULT '' COMMENT 'tenant_id',
+  gray_name VARCHAR(128) NOT NULL COMMENT 'gray_name',
+  gray_rule CLOB NOT NULL COMMENT 'gray_rule',
+  encrypted_data_key VARCHAR(256) DEFAULT '' NOT NULL COMMENT 'encrypted_data_key',
+  PRIMARY KEY (id),
+  UNIQUE (data_id, group_id, tenant_id, gray_name)
+) COMMENT 'config_info_gray';
+create index IDX_DATAID_GMT_MODIFIED on CONFIG_INFO_GRAY(data_id,gmt_modified) indextype is btree global ;
+create index IDX_GMT_MODIFIED on CONFIG_INFO_GRAY(gmt_modified) indextype is btree global ;
 /******************************************/
 /*   数据库全名 = nacos_config   */
 /*   表名称 = config_info_beta   */
@@ -73,8 +90,7 @@ CREATE TABLE config_info_beta
 );
 
 alter table config_info_beta alter column id BIGINT identity(1,1) primary key;
-alter table config_info_beta
-    add constraint uk_configinfobeta_datagrouptenant unique (data_id, group_id, tenant_id);
+alter table config_info_beta add constraint uk_configinfobeta_datagrouptenant unique (data_id, group_id, tenant_id);
 
 /******************************************/
 /*   数据库全名 = nacos_config   */
@@ -137,8 +153,7 @@ create table group_capacity
     gmt_create        datetime     not null default CURRENT_TIMESTAMP comment '创建时间',
     gmt_modified      datetime     not null default CURRENT_TIMESTAMP comment '修改时间'
 );
-comment
-on table group_capacity is '集群、各Group容量信息表';
+comment on table group_capacity is '集群、各Group容量信息表';
 -- Alter Table Add Identity --
 alter table group_capacity alter column id BIGINT identity(1,1) primary key;
 
@@ -149,28 +164,26 @@ create unique index UK_IDX_S22111164925885136 on group_capacity (group_id) index
 /*   数据库全名 = nacos_config   */
 /*   表名称 = his_config_info   */
 /******************************************/
-create table his_config_info
-(
-    id                 bigint       not null,
-    nid                bigint       not NULL comment '主键ID',
-    data_id            varchar(255) not null,
-    group_id           varchar(128) not null,
-    app_name           varchar(128) comment 'app_name',
-    content            clob         not null,
-    md5                varchar(32),
-    gmt_create         datetime     not null default CURRENT_TIMESTAMP,
-    gmt_modified       datetime     not null default CURRENT_TIMESTAMP,
-    src_user           clob,
-    src_ip             varchar(50),
-    op_type            varchar(10),
-    tenant_id          varchar(128)          default '' comment '租户字段',
-    encrypted_data_key clob         not null COMMENT '秘钥'
-);
-comment
-on table his_config_info is '多租户改造';
--- Alter Table Add Identity --
-alter table his_config_info alter column nid BIGINT identity(1,1) primary key;
-
+CREATE TABLE his_config_info (
+     id bigint  NOT NULL COMMENT 'id',
+     nid bigint  AUTO_INCREMENT NOT NULL  COMMENT 'nid, 自增标识',
+     data_id varchar(255) NOT NULL COMMENT 'data_id',
+     group_id varchar(128) NOT NULL COMMENT 'group_id',
+     app_name varchar(128) DEFAULT NULL COMMENT 'app_name',
+     content clob NOT NULL COMMENT 'content',
+     md5 varchar(32) DEFAULT NULL COMMENT 'md5',
+     gmt_create datetime NOT NULL DEFAULT now() COMMENT '创建时间',
+     gmt_modified datetime NOT NULL DEFAULT now() COMMENT '修改时间',
+     src_user clob COMMENT 'source user',
+     src_ip varchar(50) DEFAULT NULL COMMENT 'source ip',
+     op_type char(10) DEFAULT NULL COMMENT 'operation type',
+     tenant_id varchar(128) DEFAULT null COMMENT '租户字段',
+     encrypted_data_key varchar(1024) NOT NULL DEFAULT '' COMMENT '密钥',
+     publish_type varchar(50)  DEFAULT 'formal' COMMENT 'publish type gray or formal',
+     gray_name varchar(50)  DEFAULT NULL COMMENT 'gray name',
+     ext_info  clob DEFAULT NULL COMMENT 'ext info',
+     PRIMARY KEY (nid)
+)COMMENT '多租户改造';
 create index IDX_DID on his_config_info (data_id) indextype is btree global;
 -- Create Table Index --
 create index IDX_GMT_CREATE on his_config_info (gmt_create) indextype is btree global;

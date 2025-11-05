@@ -34,7 +34,7 @@ com.alibaba.nacos.plugin.datasource.impl.derby.TenantInfoMapperByDerby
 com.alibaba.nacos.plugin.datasource.impl.derby.TenantCapacityMapperByDerby
 com.alibaba.nacos.plugin.datasource.impl.derby.GroupCapacityMapperByDerby
 
-com.alibaba.nacos.plugin.datasource.impl.xugu.ConfigInfoAggrMapperByXuGu
+com.alibaba.nacos.plugin.datasource.impl.xugu.ConfigInfoGrayMapperByXuGu
 com.alibaba.nacos.plugin.datasource.impl.xugu.ConfigInfoBetaMapperByXuGu
 com.alibaba.nacos.plugin.datasource.impl.xugu.ConfigInfoMapperByXuGu
 com.alibaba.nacos.plugin.datasource.impl.xugu.ConfigInfoTagMapperByXuGu
