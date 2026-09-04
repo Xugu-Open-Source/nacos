@@ -88,7 +88,7 @@
     </issueManagement>
     
     <properties>
-        <revision>2.5.1</revision>
+        <revision>2.5.0</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Compiler settings properties -->
@@ -199,6 +199,12 @@
                 <executions>
                     <execution>
                         <id>enforce-ban-circular-dependencies</id>
+                        <!-- The rule needs the artifacts of the reactor siblings to build the
+                        dependency graph. Bind it to verify so that a partial/lifecycle-limited
+                        run (e.g. `mvn validate`) does not try to download not-yet-built
+                        sibling modules from remote repositories. The rule stays enabled and
+                        still fails the build on real circular dependencies. -->
+                        <phase>verify</phase>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
@@ -1090,4 +1096,3 @@
     </distributionManagement>
 
 </project>
-

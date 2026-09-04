@@ -25,16 +25,21 @@ import com.alibaba.nacos.plugin.datasource.model.MapperContext;
 import com.alibaba.nacos.plugin.datasource.model.MapperResult;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * The derby implementation of {@link GroupCapacityMapper}.
+ * The xugu implementation of {@link GroupCapacityMapper}.
+ *
+ * <p>XuGu specifics kept from the verified adaptation: the reserved word {@code usage} is
+ * quoted with back-quotes and paging uses {@code LIMIT} instead of {@code OFFSET/FETCH}.
+ * Adapted to upstream U1, where the statement methods live on the mapper interface as
+ * default methods (overridden here with XuGu-compatible SQL) and {@code select} no longer
+ * exists on {@link GroupCapacityMapper}.
  *
  * @author lhm
  */
 public class GroupCapacityMapperByXuGu extends AbstractMapperByXuGu implements GroupCapacityMapper {
-    
+
     @Override
     public String getDataSource() {
         return DataSourceConstant.XUGU;
@@ -44,13 +49,6 @@ public class GroupCapacityMapperByXuGu extends AbstractMapperByXuGu implements G
     public MapperResult selectGroupInfoBySize(MapperContext context) {
         String sql = "SELECT id, group_id FROM group_capacity WHERE id > ? LIMIT ?";
         return new MapperResult(sql, CollectionUtils.list(context.getWhereParameter(FieldConstant.ID), context.getPageSize()));
-    }
-
-    @Override
-    public MapperResult select(MapperContext context) {
-        String sql = "SELECT id, quota, `usage`, max_size, max_aggr_count, max_aggr_size, group_id FROM group_capacity "
-                + "WHERE group_id = ?";
-        return new MapperResult(sql, Collections.singletonList(context.getWhereParameter(FieldConstant.GROUP_ID)));
     }
 
     @Override
@@ -140,4 +138,3 @@ public class GroupCapacityMapperByXuGu extends AbstractMapperByXuGu implements G
                         context.getWhereParameter(FieldConstant.GROUP_ID)));
     }
 }
-

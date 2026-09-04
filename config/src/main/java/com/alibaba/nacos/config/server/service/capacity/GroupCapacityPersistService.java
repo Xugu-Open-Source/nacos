@@ -19,9 +19,9 @@ package com.alibaba.nacos.config.server.service.capacity;
 import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.alibaba.nacos.config.server.model.capacity.Capacity;
 import com.alibaba.nacos.config.server.model.capacity.GroupCapacity;
-import com.alibaba.nacos.config.server.utils.TimeUtils;
 import com.alibaba.nacos.persistence.datasource.DataSourceService;
 import com.alibaba.nacos.persistence.datasource.DynamicDataSource;
+import com.alibaba.nacos.config.server.utils.TimeUtils;
 import com.alibaba.nacos.plugin.datasource.MapperManager;
 import com.alibaba.nacos.plugin.datasource.constants.CommonConstant;
 import com.alibaba.nacos.plugin.datasource.constants.FieldConstant;
@@ -42,6 +42,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -97,11 +98,10 @@ public class GroupCapacityPersistService {
     public GroupCapacity getGroupCapacity(String groupId) {
         GroupCapacityMapper groupCapacityMapper = mapperManager.findMapper(dataSourceService.getDataSourceType(),
                 TableConstant.GROUP_CAPACITY);
-        MapperContext context = new MapperContext();
-        context.putWhereParameter(FieldConstant.GROUP_ID, groupId);
-        MapperResult mapperResult = groupCapacityMapper.select(context);
-        List<GroupCapacity> list = jdbcTemplate.query(mapperResult.getSql(), GROUP_CAPACITY_ROW_MAPPER,
-                mapperResult.getParamList().toArray());
+        String sql = groupCapacityMapper.select(
+                Arrays.asList("id", "quota", "`usage`", "`max_size`", "max_aggr_count", "max_aggr_size", "group_id"),
+                Collections.singletonList("group_id"));
+        List<GroupCapacity> list = jdbcTemplate.query(sql, new Object[] {groupId}, GROUP_CAPACITY_ROW_MAPPER);
         if (list.isEmpty()) {
             return null;
         }

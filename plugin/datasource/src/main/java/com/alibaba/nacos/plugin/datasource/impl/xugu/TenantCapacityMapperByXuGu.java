@@ -24,27 +24,24 @@ import com.alibaba.nacos.plugin.datasource.model.MapperContext;
 import com.alibaba.nacos.plugin.datasource.model.MapperResult;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * The xugu implementation of TenantCapacityMapper.
  *
+ * <p>Adapted to upstream U1: the statement methods are default methods on the mapper
+ * interface and {@code select} no longer exists there, so it is not overridden. XuGu
+ * specifics kept from the verified adaptation: the reserved word {@code usage} is quoted
+ * with back-quotes and paging uses {@code LIMIT}.
+ *
  * @author lhm
  **/
 
 public class TenantCapacityMapperByXuGu extends AbstractMapperByXuGu implements TenantCapacityMapper {
-    
+
     @Override
     public String getDataSource() {
         return DataSourceConstant.XUGU;
-    }
-
-    @Override
-    public MapperResult select(MapperContext context) {
-        String sql = "SELECT id, quota, `usage`, max_size, max_aggr_count, max_aggr_size, tenant_id FROM tenant_capacity "
-                + "WHERE tenant_id = ?";
-        return new MapperResult(sql, Collections.singletonList(context.getWhereParameter(FieldConstant.TENANT_ID)));
     }
 
     @Override
